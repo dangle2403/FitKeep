@@ -1,21 +1,22 @@
-const express = require("express");
-const { PrismaClient } = require("../generated/prisma_client");
+import express from "express";
+import authRouter from "./routes/auth.route.js";
+import { errorHandler } from "./middleware/error.middleware.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
-const prisma = new PrismaClient();
+
+// json
 app.use(express.json());
+// urlencoded
+app.use(express.urlencoded({ extended: true }));
 
-// Get all users
-app.get("/", async (req, res) => {
-  const userCount = await prisma.user.count();
-  res.json(
-    userCount == 0
-      ? "No users have been added yet."
-      : "Some users have been added to the database."
-  );
-});
+app.use("/v1/api/auth", authRouter);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// error handling middleware
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
