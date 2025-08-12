@@ -1,3 +1,4 @@
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -5,39 +6,39 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  output = "../generated/prisma_client"
+  output   = "../generated/prisma_client"
 }
-
 
 model Exercise {
   id          String   @id
   createdAt   DateTime
-  title        String
+  title       String
   description String?
   sets        Int?
   reps        Int?
   weight      Float?
   rest        Int?
 
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("exercises")
 }
 
-
 // model for authentication and user management
+
 model User {
-  id            String    @id
+  id            String     @id
   createdAt     DateTime
   updatedAt     DateTime
   name          String
-  email         String @unique
+  email         String     @unique
   emailVerified Boolean
   image         String?
   sessions      Session[]
   accounts      Account[]
   exercises     Exercise[]
+
   @@map("users")
 }
 
@@ -46,7 +47,7 @@ model Session {
   createdAt DateTime
   updatedAt DateTime
   expiresAt DateTime
-  token     String @unique
+  token     String   @unique
   ipAddress String?
   userAgent String?
   userId    String

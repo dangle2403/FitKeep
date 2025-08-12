@@ -1,21 +1,26 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import { PrismaClient } from "../generated/prisma_client/index.js";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./utils/auth.js";
+
 const prisma = new PrismaClient();
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.get("/", async (req, res) => {
-  const userCount = await prisma.user.count();
-  res.json(
-    userCount == 0
-      ? "No users have been added yet."
-      : "Some users have been added to the database."
-  );
-});
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+app.all("/api/auth/*splat", toNodeHandler(auth));
 
+app.use(express.json());
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
