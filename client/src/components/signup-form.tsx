@@ -37,8 +37,10 @@ const SignupForm = () => {
         onRequest: () => {},
         onSuccess: () => {
           toast.success("Account created successfully!");
-          setIsLoading(false);
-          navigate("/signin");
+          setTimeout(() => {
+            setIsLoading(false);
+            navigate("/signin");
+          }, 100);
         },
         onError: (ctx) => {
           toast.error(ctx?.error?.message || "Registration failed");

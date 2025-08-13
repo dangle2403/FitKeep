@@ -7,6 +7,7 @@ import { signIn } from "@/lib/auth-client";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -15,7 +16,11 @@ interface FormData {
 
 const SignInForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  const destination =
+    (location.state as { from?: { pathname: string } })?.from?.pathname || "/";
+
   const {
     register,
     handleSubmit,
@@ -35,8 +40,11 @@ const SignInForm = () => {
         onRequest: () => {},
         onSuccess: () => {
           toast.success("Signed in successfully!");
-          setIsLoading(false);
-          navigate("/");
+          // Give a moment for the session to be established
+          setTimeout(() => {
+            setIsLoading(false);
+            navigate(destination, { replace: true });
+          }, 100);
         },
         onError: (ctx) => {
           toast.error(ctx?.error?.message || "Sign in failed");
