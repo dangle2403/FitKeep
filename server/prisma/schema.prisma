@@ -28,7 +28,7 @@ model Exercise {
 // model for authentication and user management
 
 model User {
-  id            String     @id
+  id            String     @id @default(uuid())
   createdAt     DateTime
   updatedAt     DateTime
   name          String
@@ -43,7 +43,7 @@ model User {
 }
 
 model Session {
-  id        String   @id
+  id        String   @id  @default(uuid())
   createdAt DateTime
   updatedAt DateTime
   expiresAt DateTime
@@ -57,7 +57,7 @@ model Session {
 }
 
 model Account {
-  id                    String    @id
+  id                    String    @id @default(uuid())
   createdAt             DateTime
   updatedAt             DateTime
   accountId             String
@@ -76,7 +76,7 @@ model Account {
 }
 
 model Verification {
-  id         String    @id
+  id         String    @id  @default(uuid())
   createdAt  DateTime?
   updatedAt  DateTime?
   identifier String
