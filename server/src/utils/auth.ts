@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "../../generated/prisma_client/index.js";
-import { hashPassword, verifyPassword } from "./argon2.js"; 
+import { hashPassword, verifyPassword } from "./argon2.js";
 
 const prisma = new PrismaClient();
 
@@ -11,17 +11,24 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    minPasswordLength: 6,
+    minPasswordLength: 8,
     autoSignIn: false,
     password: {
       hash: hashPassword,
       verify: verifyPassword,
-    }
+    },
   },
-  advanced:{
+  advanced: {
     database: {
       generateId: false,
-    }
+    },
+  },
+  user: {
+    additionalFields: {
+      role: {
+        type: ["USER", "ADMIN"],
+      },
+    },
   },
   socialProviders: {
     google: {
@@ -32,6 +39,4 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: ["http://localhost:5173"],
-  
 });
-

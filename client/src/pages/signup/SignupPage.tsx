@@ -1,5 +1,6 @@
 import SignupForm from "@/components/signup-form";
 import { Link } from "react-router-dom";
+import SignInOauthButton from "@/components/signin-Oauth-button";
 
 const SignupPage = () => {
   return (
@@ -32,6 +33,24 @@ const SignupPage = () => {
                 </span>
               </Link>
             </p>
+          </div>
+          {/* Divider */}
+          <div className="my-5">
+            <hr className="border-gray-300" />
+            <div className="relative -top-3 text-center">
+              <span className="bg-white px-4 text-gray-500 text-sm">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          {/* OAuth Buttons */}
+          <div className="w-full">
+            <SignInOauthButton
+              signUp
+              provider="google"
+              logo="/google-logo.png"
+            />
           </div>
         </div>
       </div>

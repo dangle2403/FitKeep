@@ -69,7 +69,7 @@ const SignupForm = () => {
           {...register("name", {
             required: "Name is required",
             minLength: {
-              value: 6,
+              value: 4,
               message: "Name must be at least 6 characters",
             },
             maxLength: {
