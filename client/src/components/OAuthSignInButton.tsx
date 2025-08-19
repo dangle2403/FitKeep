@@ -18,7 +18,7 @@ const SignInOauthButton = ({
   async function handleOnClick() {
     await signIn.social({
       provider,
-      callbackURL: import.meta.env.VITE_BASE_URL + "/dashboard",
+      callbackURL: import.meta.env.VITE_BASE_URL,
       errorCallbackURL: import.meta.env.VITE_BASE_URL + "/signin",
       fetchOptions: {
         onRequest: () => {
@@ -39,12 +39,18 @@ const SignInOauthButton = ({
 
   return (
     <Button
-      className="w-full bg-[#F5F5F5] hover:bg-[#F5F5F5]/70 h-10 text-black text-lg font-sm border-black border-1"
+      className="w-full bg-[#F5F5F5] hover:bg-[#F5F5F5]/70 h-10 sm:h-11 lg:h-12 text-black text-sm sm:text-base lg:text-lg font-medium border border-gray-300 hover:border-gray-400 transition-all duration-200 flex items-center justify-center gap-2 sm:gap-3"
       onClick={handleOnClick}
       disabled={isPending}
     >
-      <img src={logo} alt="logo" className="size-7" /> Sign {action} with{" "}
-      {providerName}
+      <img
+        src={logo}
+        alt={`${providerName} logo`}
+        className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7"
+      />
+      <span className="truncate">
+        Sign {action} with {providerName}
+      </span>
     </Button>
   );
 };

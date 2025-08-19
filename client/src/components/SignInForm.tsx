@@ -1,22 +1,26 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import SignupSkeleton from "./skeletons/signupSkeleton";
+import SigninSkeleton from "./skeletons/SignInSkeleton";
 import { useForm } from "react-hook-form";
-import { signUp } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 interface FormData {
-  name: string;
   email: string;
   password: string;
 }
 
-const SignupForm = () => {
+const SignInForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  const destination =
+    (location.state as { from?: { pathname: string } })?.from?.pathname || "/";
+
   const {
     register,
     handleSubmit,
@@ -27,64 +31,36 @@ const SignupForm = () => {
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
-    await signUp.email(
+    await signIn.email(
       {
-        name: data.name,
         email: data.email,
         password: data.password,
       },
       {
         onRequest: () => {},
         onSuccess: () => {
-          toast.success("Account created successfully!");
+          toast.success("Signed in successfully!");
+          // Give a moment for the session to be established
           setTimeout(() => {
             setIsLoading(false);
-            navigate("/signin");
+            navigate(destination, { replace: true });
           }, 100);
         },
         onError: (ctx) => {
-          toast.error(ctx?.error?.message || "Registration failed");
+          toast.error(ctx?.error?.message || "Sign in failed");
           setIsLoading(false);
         },
       }
     );
   };
   if (isLoading) {
-    return <SignupSkeleton />;
+    return <SigninSkeleton />;
   }
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-md w-full space-y-4"
     >
-      {/* Name */}
-      <div className="space-y-3">
-        <Label htmlFor="name" className="text-lg font-medium">
-          Name
-        </Label>
-        <Input
-          id="name"
-          placeholder="Your full name"
-          className="h-10 text-lg px-4"
-          {...register("name", {
-            required: "Name is required",
-            minLength: {
-              value: 4,
-              message: "Name must be at least 6 characters",
-            },
-            maxLength: {
-              value: 50,
-              message: "Name must be under 50 characters",
-            },
-          })}
-        />
-        {errors.name && (
-          <p className="text-red-500 text-base">
-            {String(errors.name?.message || "")}
-          </p>
-        )}
-      </div>
-
       {/* Email */}
       <div className="space-y-3">
         <Label htmlFor="email" className="text-lg font-medium">
@@ -141,12 +117,12 @@ const SignupForm = () => {
 
       <Button
         type="submit"
-        className="w-full bg-[#FF6600] hover:bg-[#FF6600]/70 h-10 text-lg font-medium"
+        className="w-full bg-[#FF6600] hover:bg-[#FF6600]/70 h-10 text-lg font-medium cursor-pointer"
       >
-        Sign Up
+        Sign In
       </Button>
     </form>
   );
 };
 
-export default SignupForm;
+export default SignInForm;

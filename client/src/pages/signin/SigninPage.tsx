@@ -1,6 +1,6 @@
-import SignInForm from "@/components/signin-form";
+import SignInForm from "@/components/SignInForm";
 import { Link } from "react-router-dom";
-import SignInOauthButton from "@/components/signin-Oauth-button";
+import SignInOauthButton from "@/components/OAuthSignInButton";
 
 const SigninPage = () => {
   return (

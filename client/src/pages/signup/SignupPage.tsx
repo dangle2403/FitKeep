@@ -1,6 +1,6 @@
-import SignupForm from "@/components/signup-form";
+import SignupForm from "@/components/SignUpForm";
 import { Link } from "react-router-dom";
-import SignInOauthButton from "@/components/signin-Oauth-button";
+import SignInOauthButton from "@/components/OAuthSignInButton";
 
 const SignupPage = () => {
   return (
@@ -35,17 +35,17 @@ const SignupPage = () => {
             </p>
           </div>
           {/* Divider */}
-          <div className="my-5">
+          <div className="my-4 sm:my-5 lg:my-6">
             <hr className="border-gray-300" />
-            <div className="relative -top-3 text-center">
-              <span className="bg-white px-4 text-gray-500 text-sm">
+            <div className="relative -top-2.5 sm:-top-3 text-center">
+              <span className="bg-white px-3 sm:px-4 text-gray-500 text-xs sm:text-sm lg:text-base">
                 Or continue with
               </span>
             </div>
           </div>
 
           {/* OAuth Buttons */}
-          <div className="w-full">
+          <div className="w-full space-y-3 sm:space-y-4">
             <SignInOauthButton
               signUp
               provider="google"
