@@ -14,8 +14,20 @@ enum Role{
   ADMIN
 }
 
+model Schedule {
+  id        String     @id @default(uuid())
+  date      DateTime
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises ScheduleExercise[]  // join table
+  createdAt DateTime
+  updatedAt DateTime
+
+  @@map("schedules")
+}
+
 model Exercise {
-  id          String   @id
+  id          String   @id @default(uuid())
   createdAt   DateTime
   title       String
   description String?
@@ -26,8 +38,27 @@ model Exercise {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  schedules ScheduleExercise[]  // join table
 
   @@map("exercises")
+}
+
+// Join table 
+model ScheduleExercise {
+  id          String   @id @default(uuid())
+  scheduleId  String
+  exerciseId  String
+  schedule    Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  exercise    Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  // optional: custom per-schedule exercise config
+  sets        Int?
+  reps        Int?
+  weight      Float?
+  rest        Int?
+
+  @@unique([scheduleId, exerciseId])
 }
 
 // model for authentication and user management
@@ -44,6 +75,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   exercises     Exercise[]
+  schedules     Schedule[]
 
   @@map("users")
 }

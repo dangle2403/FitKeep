@@ -1,5 +1,7 @@
-# Node
+# Dependencies
 node_modules/
+client/node_modules/
+server/node_modules/
 
 # Logs
 logs
@@ -7,26 +9,130 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Build
+# Build outputs
 /dist
 /build
-
-# Dependency directories
-client/node_modules/
-server/node_modules/
+dist/
+build/
+dist-ssr/
+client/dist/
+server/build/
 
 # Environment files
 .env
 .env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.local
 
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Prisma generated
+# Prisma generated files
 server/generated/
+generated/prisma_client/
+/generated/prisma
+
+# Cache directories
+.cache/
+.npm/
+.eslintcache/
+.parcel-cache/
+
+# IDE/Editor files
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Lock files (if using npm, keep package-lock.json but ignore yarn.lock and vice versa)
+# Uncomment the one you DON'T want to track:
+# package-lock.json
+# yarn.lock
+
+# Runtime files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# VS Code extension test files
+test-results/
+playwright-report/
+playwright/.cache/
