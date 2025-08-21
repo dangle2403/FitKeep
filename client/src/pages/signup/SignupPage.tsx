@@ -1,8 +1,27 @@
 import SignupForm from "@/components/SignUpForm";
 import { Link } from "react-router-dom";
 import SignInOauthButton from "@/components/OAuthSignInButton";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { getSession } from "@/lib/auth-client";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const session = await getSession();
+
+        if (session) {
+          navigate("/");
+        }
+      } catch (err) {
+        console.error("Session check failed:", err);
+      }
+    };
+
+    checkSession();
+  }, [navigate]);
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
