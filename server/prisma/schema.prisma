@@ -8,65 +8,92 @@ generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma_client"
 }
-
-enum Role{
+enum Role {
   USER
   ADMIN
 }
 
+enum ViewType {
+  DAY
+  WEEK
+  MONTH
+}
+
+enum RepeatType {
+  NONE        // no repeat
+  DAILY       // every day
+  WEEKLY      // every week (choose weekdays)
+}
 model Schedule {
-  id        String     @id @default(uuid())
+  id        String             @id @default(uuid())
   date      DateTime
   userId    String
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exercises ScheduleExercise[]  // join table
-  createdAt DateTime
-  updatedAt DateTime
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises ScheduleExercise[]
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 
+  @@index([userId, date])
   @@map("schedules")
 }
 
-model Exercise {
-  id          String   @id @default(uuid())
-  createdAt   DateTime
-  title       String
+// Exercise planned for a schedule (self-contained)
+model ScheduleExercise {
+  id          String     @id @default(uuid())
+  scheduleId  String
+  userId      String
+
+  name        String
   description String?
-  sets        Int?
-  reps        Int?
+  sets        Int
+  reps        Int
   weight      Float?
-  rest        Int?
+  restTime    Int?
+  note        String?
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  schedules ScheduleExercise[]  // join table
+  repeatType  RepeatType @default(NONE)
+  weekdays    Int[]      // store 0-6 if WEEKLY
+  startDate   DateTime   @default(now())
+  endDate     DateTime?
 
-  @@map("exercises")
+  schedule    Schedule   @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs        ExerciseLog[]
+
+  @@map("schedule_exercises")
 }
 
-// Join table 
-model ScheduleExercise {
-  id          String   @id @default(uuid())
-  scheduleId  String
-  exerciseId  String
-  schedule    Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-  exercise    Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+model ExerciseLog {
+  id                String           @id @default(uuid())
+  scheduleExerciseId String
+  userId            String
+  date              DateTime?
+  sets              Int
+  reps              Int
+  weight            Float?
+  restTime          Int?
 
-  // optional: custom per-schedule exercise config
-  sets        Int?
-  reps        Int?
-  weight      Float?
-  rest        Int?
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scheduleExercise  ScheduleExercise @relation(fields: [scheduleExerciseId], references: [id], onDelete: Cascade)
 
-  @@unique([scheduleId, exerciseId])
+  @@index([userId, date])
+  @@index([scheduleExerciseId, date])
+  @@map("exercise_logs")
+}
+
+model UserPreference {
+  id       String   @id @default(uuid())
+  userId   String   @unique
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  viewType ViewType @default(DAY)
 }
 
 // model for authentication and user management
 
 model User {
   id            String     @id @default(uuid())
-  createdAt     DateTime
-  updatedAt     DateTime
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   name          String
   email         String     @unique
   emailVerified Boolean
@@ -74,16 +101,18 @@ model User {
   role          Role       @default(USER)
   sessions      Session[]
   accounts      Account[]
-  exercises     Exercise[]
-  schedules     Schedule[]
+  preferences  UserPreference?
+  schedules   Schedule[]
+  scheduleExercises ScheduleExercise[]
+  logs         ExerciseLog[]
 
   @@map("users")
 }
 
 model Session {
   id        String   @id  @default(uuid())
-  createdAt DateTime
-  updatedAt DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   expiresAt DateTime
   token     String   @unique
   ipAddress String?
@@ -96,8 +125,9 @@ model Session {
 
 model Account {
   id                    String    @id @default(uuid())
-  createdAt             DateTime
-  updatedAt             DateTime
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
   accountId             String
   providerId            String
   userId                String
@@ -115,8 +145,8 @@ model Account {
 
 model Verification {
   id         String    @id  @default(uuid())
-  createdAt  DateTime?
-  updatedAt  DateTime?
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime?  @updatedAt
   identifier String
   value      String
   expiresAt  DateTime

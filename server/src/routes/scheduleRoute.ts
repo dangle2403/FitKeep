@@ -1,11 +1,13 @@
 import Router from 'express';
+import { createSchedule, getAllSchedule, getScheduleById } from '../controllers/schedule.Controller.js';
+import { requireAuth } from '../middleware/authMiddleware.js';
 
 const scheduleRouter = Router();
 
-scheduleRouter.post('/', ) // Create a new schedule for a user
-scheduleRouter.get('/', ) // Get all schedules for a user
-scheduleRouter.get('/:id', ) // Get a specific schedule by ID
-scheduleRouter.patch('/:id', ) // Update an existing schedule
-scheduleRouter.delete('/:id', ) // Delete a schedule
+scheduleRouter.use(requireAuth)
+
+scheduleRouter.post('/', createSchedule) // create a schedule
+scheduleRouter.get('/', getAllSchedule) // list schedules of that user (filter by day/week)
+scheduleRouter.get('/:id', getScheduleById) // Get a specific schedule by ID
 
 export default scheduleRouter;

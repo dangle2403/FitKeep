@@ -21,7 +21,7 @@ const HeroSection = () => {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up">
-          <Link to="/schedule">
+          <Link to="/signin">
             <Button
               size="lg"
               className="bg-orange-500 hover:bg-orange-500/90 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 glow-orange group"
